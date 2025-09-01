@@ -1,0 +1,8 @@
+
+RewriteEngine On
+
+# Si el archivo o directorio existe, lo sirve normal
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^ api/routes.php [QSA,L]
