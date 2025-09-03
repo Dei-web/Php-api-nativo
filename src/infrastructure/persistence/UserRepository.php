@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../../enrute.php';
 require_once SRC_PATH.  '/domain/Users.php';
+require_once SRC_PATH.  '/domain/Student.php';
+require_once SRC_PATH.  '/domain/Teacher.php';
 require_once SRC_PATH.  '/domain/port/UserInterfacesRpo.php';
 require_once __DIR__ . '/DatabaseConfig.php';
 
@@ -85,35 +87,63 @@ class UserRepositoryClass implements InterfaceRepo
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function RegisterStudent(User $us, string $programa, float $calificacion, $foto = null): void
+    public function findByEmail(string $email): ?User
+    {
+        try {
+            $sql = "SELECT id, name, email, password, role 
+                FROM users 
+                WHERE email = :email 
+                LIMIT 1";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$row) {
+                return null;
+            }
+
+            return new User(
+                $row['name'],
+                $row['email'],
+                $row['password'],
+                $row['role'],
+                $row['id']
+            );
+        } catch (\PDOException $e) {
+            throw new Exception("Error buscando usuario por email: " . $e->getMessage(), 0, $e);
+        }
+    }
+
+    public function RegisterStudent(Students $student): void
     {
         try {
             $sql = "CALL CreateStudent(:name, :email, :password, :programa, :calificacion, :foto)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                ':name' => $us->Get_name(),
-                ':email' => $us->Get_email(),
-                ':password' => password_hash($us->Get_password(), PASSWORD_BCRYPT),
-                ':programa' => $programa,
-                ':calificacion' => $calificacion,
-                ':foto' => $foto
+                ':name' => $student->Get_name(),
+                ':email' => $student->Get_email(),
+                ':password' => password_hash($student->Get_password(), PASSWORD_BCRYPT),
+                ':programa' => $student->Get_programa(),
+                ':calificacion' => $student->Get_calificacion(),
+                ':foto' => $student->Get_foto()
             ]);
         } catch (\PDOException $e) {
             throw new Exception("Error registrando estudiante: " . $e->getMessage(), 0, $e);
         }
     }
 
-    public function RegisterTeacher(User $us, string $programa, string $especialidad): void
+    public function RegisterTeacher(Teachers $teacher): void
     {
         try {
             $sql = "CALL CreateTeacher(:name, :email, :password, :programa, :especialidad)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                ':name' => $us->Get_name(),
-                ':email' => $us->Get_email(),
-                ':password' => password_hash($us->Get_password(), PASSWORD_BCRYPT),
-                ':programa' => $programa,
-                ':especialidad' => $especialidad
+                ':name' => $teacher->Get_name(),
+                ':email' => $teacher->Get_email(),
+                ':password' => password_hash($teacher->Get_password(), PASSWORD_BCRYPT),
+                ':programa' => $teacher->Get_programa(),
+                ':especialidad' => $teacher->Get_especialidad()
             ]);
         } catch (\PDOException $e) {
             throw new Exception("Error registrando profesor: " . $e->getMessage(), 0, $e);
