@@ -1,14 +1,13 @@
 <?php
 
-
 class User
 {
     private ?int $id;
-    private string $name;
-    private string $email;
-    private string $password;
+    private ?string $name;
+    private ?string $email;
+    private ?string $password;
 
-    public function __construct(string $name, string $email, string $password, ?int $id = null)
+    public function __construct(?string $name = null, ?string $email = null, ?string $password = null, ?int $id = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -16,50 +15,43 @@ class User
         $this->password = $password;
     }
 
-    //here Getters without Get_password its funny this
-
     public function Get_id(): ?int
     {
         return $this->id;
-
     }
 
-    public function Get_name(): string
+    public function Get_name(): ?string
     {
         return $this->name;
     }
 
-    public function Get_email(): string
+    public function Get_email(): ?string
     {
         return $this->email;
     }
 
-    public function Get_password(): string
+    public function Get_password(): ?string
     {
         return $this->password;
     }
 
-    // All Setters
-
-    public function Set_id(int $id): ?int
+    public function Set_id(int $id): void
     {
-        return $this->id = $id;
+        $this->id = $id;
     }
 
-    public function Set_email(string $email): string
+    public function Set_name(string $name): void
     {
-        return $this->email = $email;
+        $this->name = $name;
     }
 
-    public function Set_name(string $name): string
+    public function Set_email(string $email): void
     {
-        return $this->name = $name;
+        $this->email = $email;
     }
 
-    public function Set_password(int $password): string
+    public function Set_password(string $password): void
     {
-        return $this->password = $password;
+        $this->password = $password;
     }
-
-
 }
