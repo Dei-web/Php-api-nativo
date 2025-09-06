@@ -27,4 +27,27 @@ class Service
         $this->userRepository->RegisterUser($us);
     }
 
+    public function SelectAllStudents(): ?array
+    {
+        $users = $this->userRepository->GetAllUsersStudens();
+        return $users;
+    }
+
+    public function SelectAllteacher(): ?array
+    {
+        $users = $this->userRepository->GetAllUsersTeacher();
+        return $users;
+    }
+
+    public function DeleteUserSer(int $id): void
+    {
+        $this->userRepository->DeleteUser($id);
+    }
+
+    public function updatePasswordByEmail(string $email, string $hashedPassword): void
+    {
+        $this->userRepository->updatePassword($email, $hashedPassword);
+    }
+
+
 }

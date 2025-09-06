@@ -20,12 +20,15 @@ class UserRepositoryClass implements InterfaceRepo
     {
         try {
 
-            $Sql = "CALL CreateUser(:name, :email, :password)";
+
+            $Sql = "INSERT INTO users (name, email, pass )
+                VALUES (:name, :email, :password )";
             $stmt = $this->pdo->prepare($Sql);
             $stmt ->execute([
             ':name' => $us->Get_name(),
             ':email' => $us ->Get_email(),
             ':password' => password_hash($us->Get_password(), PASSWORD_BCRYPT)
+
             ]);
         } catch (\PDOException $e) {
             throw new Exception("Error Processing Request" . $e->getMessage(), 0, $e);
@@ -51,7 +54,7 @@ class UserRepositoryClass implements InterfaceRepo
             $sql = "UPDATE users 
                 SET name = :name, 
                     email = :email, 
-                    password = :password
+                    pass = :password
                 WHERE id = :id";
 
             $stmt = $this->pdo->prepare($sql);
@@ -90,7 +93,7 @@ class UserRepositoryClass implements InterfaceRepo
     public function findByEmail(string $email): ?User
     {
         try {
-            $sql = "SELECT id, name, email, password, role 
+            $sql = "SELECT id, name, email, pass, role 
                 FROM users 
                 WHERE email = :email 
                 LIMIT 1";
@@ -106,7 +109,7 @@ class UserRepositoryClass implements InterfaceRepo
             return new User(
                 $row['name'],
                 $row['email'],
-                $row['password'],
+                $row['pass'],
                 $row['role'],
                 $row['id']
             );
@@ -149,5 +152,16 @@ class UserRepositoryClass implements InterfaceRepo
             throw new Exception("Error registrando profesor: " . $e->getMessage(), 0, $e);
         }
     }
+
+    public function updatePassword(string $email, string $hashedPassword): void
+    {
+        $sql = "UPDATE users SET pass = :password WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':password' => $hashedPassword,
+            ':email'    => $email
+        ]);
+    }
+
 
 }

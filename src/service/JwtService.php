@@ -22,8 +22,8 @@ class JwtService
     {
         $now = time();
         $payload = [
-            'iss' => 'your-app',        // emisor
-            'sub' => $user->Get_id(),    // id del usuario
+            'iss' => 'your-app',
+            'sub' => $user->Get_id(),
             'email' => $user->Get_email(),
             'role' => $user->Get_role(),
             'iat' => $now,

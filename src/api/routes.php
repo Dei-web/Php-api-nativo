@@ -27,11 +27,32 @@ switch (true) {
         $controller->Registerhttp();
         break;
 
-        // case preg_match('#^/delete/(\d+)$#', $path, $matches) && $method === 'DELETE':
-        //     $id = (int)$matches[1];
-        //     $controller->Delete_user($id);
-        //     break;
-        //
+    case $path === '/login' && $method === 'POST':
+        $controller->LoginHTTP();
+        break;
+
+    case $path === '/studens' && $method === 'GET':
+        $controller->GetAllStudensHTTP();
+        break;
+
+    case $path === '/studens' && $method === 'GET':
+        $controller->GetAllTeacherHTTP();
+        break;
+
+    case $path === '/recover' && $method === 'POST':
+        $controller->ResetPasswordHTTP();
+        break;
+
+    case $path === '/send' && $method === 'POST':
+        $controller->SendEamilHTTP();
+        break;
+
+
+    case preg_match('#^/delete/(\d+)$#', $path, $matches) && $method === 'DELETE':
+        $id = (int)$matches[1];
+        $controller->DeleteUserHTTP($id);
+        break;
+
         // case preg_match('#^/update/(\d+)$#', $path, $matches) && $method === 'PUT':
         //     $id = (int)$matches[1];
         //     $controller->UpdateUser($id);

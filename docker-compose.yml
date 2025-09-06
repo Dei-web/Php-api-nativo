@@ -9,7 +9,7 @@ services:
       - ./src:/var/www/html/src
       - ./vendor:/var/www/html/vendor
       - ./composer.json:/var/www/html/composer.json
-      - ./composer.lock:/var/www/html/composer.lock
+      # - ./composer.lock:/var/www/html/composer.lock
       - ./apache.conf:/etc/apache2/sites-enabled/000-default.conf
       - ./.env:/var/www/html/.env
     ports:
@@ -25,7 +25,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/DBsql.sql:/docker-entrypoint-initdb.d/init.sql
 
   pgadmind:
     image: dpage/pgadmin4
@@ -38,5 +38,15 @@ services:
     depends_on:
       - posgretdb
 
+  redis:
+    image: redis:7.2
+    restart: no
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
 volumes:
   pgdata:
+  redis_data:

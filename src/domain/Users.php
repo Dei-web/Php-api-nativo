@@ -6,7 +6,7 @@ class User
     private ?string $name;
     private ?string $email;
     private ?string $password;
-    private ?string $role; // Nuevo campo
+    private ?string $role;
 
     public function __construct(
         ?string $name = null,
