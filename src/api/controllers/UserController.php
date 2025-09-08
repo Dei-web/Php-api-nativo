@@ -12,11 +12,13 @@ require_once SRC_PATH . '/Utils/util.php';
 
 class UsersControllers
 {
+    private UserRepositoryClass $repo;
     private Service $service;
     private AuntServices $serviceAunt;
 
     public function __construct()
     {
+        $this->repo = new UserRepositoryClass();
         $repo = new UserRepositoryClass();
         $this->service = new Service($repo);
         $this->serviceAunt = new AuntServices($repo);
@@ -157,11 +159,19 @@ class UsersControllers
     {
         $data = json_decode(file_get_contents('php://input'), true) ?: [];
         $email = trim($data['email'] ?? '');
-        var_dump($email);
+        // var_dump($email);
         if (!$email) {
             http_response_code(400);
             echo json_encode(['error' => 'Email inválido.']);
             return;
+        }
+
+        $user = $this->repo->findByEmail($email);
+        if (!$user) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Email inválido.']);
+            return;
+
         }
 
         try {
